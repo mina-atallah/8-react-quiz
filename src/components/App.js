@@ -14,6 +14,11 @@ const initialState = {
     ('loading','error','ready', 'active', 'finished')
   */
   status: "loading",
+  /*
+  - an index to track the current question to display 
+  - we need this index as variable because it will re-render and update the state so the next question is displayed
+  */
+  index: 0,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -29,7 +34,10 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   // deprived state
   const numQuestions = questions.length;
@@ -51,7 +59,7 @@ function App() {
         {status === "ready" && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-        {status === "active" && <Question />}
+        {status === "active" && <Question question={questions[index]} />}
       </Main>
     </div>
   );
