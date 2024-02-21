@@ -19,6 +19,15 @@ const initialState = {
   - we need this index as variable because it will re-render and update the state so the next question is displayed
   */
   index: 0,
+  /* 
+    new piece of state to know which option was selected & to know the correct answer 
+    = answer is the index number of the option
+  */
+  answer: null,
+  /*
+    new piece of state to be updated after q qestion is answered
+  */
+  points: 0,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -28,13 +37,30 @@ function reducer(state, action) {
       return { ...state, status: "error" };
     case "start":
       return { ...state, status: "active" };
+    case "newAnswer":
+      /* 
+        - a variable to know which is the current question 
+        - because we don't have that stored in the state
+        - we only know the index, not the question itself
+        - doing that by laveraging the CURRENT STATE in the reducer 
+        - check the current question to the receieved answer to update the points
+      */
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
     default:
       throw new Error("Action is unkown");
   }
 }
 
 function App() {
-  const [{ questions, status, index }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -59,7 +85,13 @@ function App() {
         {status === "ready" && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-        {status === "active" && <Question question={questions[index]} />}
+        {status === "active" && (
+          <Question
+            question={questions[index]}
+            dispatch={dispatch}
+            answer={answer}
+          />
+        )}
       </Main>
     </div>
   );
