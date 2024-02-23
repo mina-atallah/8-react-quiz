@@ -4,15 +4,9 @@ export default function Progress({
   index,
   numQuestions,
   points,
-  questions,
+  sumPoints,
   answer,
 }) {
-  // deprived state to sum of all points
-  const sumPoints = questions.reduce(
-    (acc, currQuestion) => acc + currQuestion.points,
-    0
-  );
-
   return (
     <header className="progress">
       <progress max={numQuestions} value={index + Number(answer !== null)} />
