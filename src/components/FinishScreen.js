@@ -1,13 +1,12 @@
 import React from "react";
+import { useQuiz } from "../contexts/QuizContext";
 
-export default function FinishScreen({
-  points,
-  sumPoints,
-  highscore,
-  dispatch,
-}) {
-  // deprived state from points and sumPoints
+export default function FinishScreen() {
+  const { points, sumPoints, highscore, dispatch } = useQuiz();
+
+  // derived state from points and sumPoints
   const percentage = (points / sumPoints) * 100;
+
   return (
     <>
       <p className="result">
